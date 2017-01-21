@@ -78,5 +78,8 @@ int main(int argc, char *argv[])
     {
         printf("%c : %ld\n", 'A' + i, hist[i]);
     }
-    printf("Data rate: %f Bps\n", ((double)filelen / microseconds) * 1000000);
+    printf("BLOCK SIZE %ld BYTES\n", blockSize);
+    printf("TOTAL BYTES %ld BYTES\n", filelen);
+    printf("TIME: %ld\n microseconds", microseconds);
+    printf("Data rate: %f Bytes per second\n", ((double)filelen / microseconds) * 1000000);
 }
