@@ -51,6 +51,6 @@ int main(int argc, char *argv[])
     }
     fclose(fp);
     long end_time = getMicrotime();
-    printf("It took %ld microseconds to do this\n", end_time - cur_time);
+    printf("%ld", end_time - cur_time);
     return 0;
 }
