@@ -16,7 +16,7 @@ long getMicrotime(){
 void random_array(char *array, long bytes)
 {
     long now =  getMicrotime();
-    srand(now);
+    srand((unsigned)now);
     long index;
     char c;
     for (index = 0; index < bytes; index++)

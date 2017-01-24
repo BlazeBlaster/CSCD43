@@ -40,17 +40,24 @@ int main(int argc, char *argv[])
     buffer = (char *)malloc(blockSize);
 
     int index = 0;
-    long cur_time = getMicrotime();
     FILE *fp = fopen(filename, "w");
+    long cur_time = getMicrotime();
     while (index < (numBytes / blockSize))
     {
         random_array(buffer, blockSize);
-        fwrite(buffer, 1, blockSize, fp);
+        fwrite(buffer, blockSize, 1, fp);
         fflush(fp);
         index++;
     }
-    fclose(fp);
+    if (numBytes % blockSize > 0)
+    {
+        random_array(buffer, numBytes % blockSize);
+        fwrite(buffer, blockSize, 1, fp);
+        fflush(fp);
+    }
     long end_time = getMicrotime();
+    fclose(fp);
+
     printf("%ld", end_time - cur_time);
     return 0;
 }
