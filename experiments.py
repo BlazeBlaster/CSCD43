@@ -4,34 +4,28 @@ import subprocess
 def timetoreadfromfile(name, writesize, blocksize):
     writetime = subprocess.check_output(
         ["./create_random_file", name, writesize, blocksize])
-    return str(int(writetime) / 1000000)
+    speed = round(int(writesize) / (int(writetime)/ 1000000))
+    return str(int(writetime) / 1000) + " milliseconds with a rate of " + str(speed) + " bytes per"
 
 
 if __name__ == "__main__":
     size = "10000000"
-    print("Took " + timetoreadfromfile("experiment_100.txt", size, "100") +
+    a = timetoreadfromfile("experiment_100.txt", size, "100")
+    print("Took " + a +
           " seconds to write a file of size " + size + " with blocksize of " + "100")
-    print("Took " + timetoreadfromfile("experiment_200.txt", size, "200") +
-          " seconds to write a file of size " + size + " with blocksize of " + "200")
-    print("Took " + timetoreadfromfile("experiment_400.txt", size, "400") +
-          " seconds to write a file of size " + size + " with blocksize of " + "400")
-    print("Took " + timetoreadfromfile("experiment_800.txt", size, "800") +
-          " seconds to write a file of size " + size + " with blocksize of " + "800")
-    print("Took " + timetoreadfromfile("experiment_1600.txt", size, "1600") +
-          " seconds to write a file of size " + size + " with blocksize of " + "1600")
-    print("Took " + timetoreadfromfile("experiment_3200.txt", size, "3200") +
-          " seconds to write a file of size " + size + " with blocksize of " + "3200")
-    print("Took " + timetoreadfromfile("experiment_6400.txt", size, "6400") +
-          " seconds to write a file of size " + size + " with blocksize of " + "6400")
-    print("Took " + timetoreadfromfile("experiment_12800.txt", size, "12800") +
-          " seconds to write a file of size " + size + " with blocksize of " + "12800")
-    print("Took " + timetoreadfromfile("experiment_25600.txt", size, "25600") +
-          " seconds to write a file of size " + size + " with blocksize of " + "25600")
-    print("Took " + timetoreadfromfile("experiment_51200.txt", size, "51200") +
-          " seconds to write a file of size " + size + " with blocksize of " + "51200")
+    print("Took " + timetoreadfromfile("experiment_1000.txt", size, "1000") +
+          " seconds to write a file of size " + size + " with blocksize of " + "1000")
+    print("Took " + timetoreadfromfile("experiment_10000.txt", size, "10000") +
+          " seconds to write a file of size " + size + " with blocksize of " + "10000")
     print("Took " + timetoreadfromfile("experiment_100000.txt", size, "100000") +
           " seconds to write a file of size " + size + " with blocksize of " + "100000")
-    print("Took " + timetoreadfromfile("experiment_200000.txt", size, "200000") +
-          " seconds to write a file of size " + size + " with blocksize of " + "200000")
-    print("Took " + timetoreadfromfile("experiment_300000.txt", size, "300000") +
-          " seconds to write a file of size " + size + " with blocksize of " + "300000")
+    print("Took " + timetoreadfromfile("experiment_1000000.txt", size, "1000000") +
+          " seconds to write a file of size " + size + " with blocksize of " + "1000000")
+    print("Took " + timetoreadfromfile("experiment_1500000.txt", size, "1500000") +
+          " seconds to write a file of size " + size + " with blocksize of " + "1500000")
+    print("Took " + timetoreadfromfile("experiment_2000000.txt", size, "2000000") +
+          " seconds to write a file of size " + size + " with blocksize of " + "2000000")
+    print("Took " + timetoreadfromfile("experiment_2500000.txt", size, "2500000") +
+          " seconds to write a file of size " + size + " with blocksize of " + "2500000")
+    print("Took " + timetoreadfromfile("experiment_3000000.txt", size, "3000000") +
+          " seconds to write a file of size " + size + " with blocksize of " + "3000000")
