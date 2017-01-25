@@ -2,7 +2,7 @@ import subprocess
 
 
 def timetoreadfromfile(name, blocksize):
-    writetime = subprocess.check_output(["./get_histogram", name, blocksize])
+    writetime = subprocess.check_output(["./get_histogram", name, blocksize, "usefulinput"])
     return str (int(writetime) / 1000000)
 
 

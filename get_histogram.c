@@ -21,7 +21,8 @@ int helper()
  */
 int get_histogram(FILE *file_ptr, long hist[], int block_size, long *milliseconds, long *total_bytes_read)
 {
-    if (file_ptr == NULL) {
+    if (file_ptr == NULL)
+    {
         return -1;
     }
     char *buffer;
@@ -31,33 +32,46 @@ int get_histogram(FILE *file_ptr, long hist[], int block_size, long *millisecond
     int index;
     long cur_time, end_time;
     cur_time = getMicrotime();
-    while (counter < (*total_bytes_read / (long)block_size)) {
+    while (counter < (*total_bytes_read / (long)block_size))
+    {
         fread(buffer, block_size, 1, file_ptr);
-        for (index = 0; index < block_size; index++) {
-            hist[buffer[index] - 'A'] +=1;
+        for (index = 0; index < block_size; index++)
+        {
+            hist[buffer[index] - 'A'] += 1;
         }
         counter++;
     }
     fclose(file_ptr);
     end_time = getMicrotime();
-    
-    //printf("here");
-    //free(buffer);
+
     *milliseconds = end_time - cur_time;
     return 0;
-
 }
+int utility(char *filename, long blockSize)
+{
+    FILE *file_ptr = fopen(filename, "r");
+    fseek(file_ptr, 0, SEEK_END);
 
+    long microseconds;
+    long hist[26];
+    long filelen = ftell(file_ptr);
+    rewind(file_ptr);
+    int ret = get_histogram(file_ptr, hist, blockSize, &microseconds, &filelen);
+    
+    printf("%ld", microseconds);
+    return 0;
+}
 int main(int argc, char *argv[])
 {
     long hist[26];
     long microseconds;
     long filelen;
-    for (int i = 0; i < 26; i++) {
+    for (int i = 0; i < 26; i++)
+    {
         hist[i] = 0;
     }
 
-    if (argc != 3)
+    if (argc < 3 || argc >= 5)
     {
         helper();
         return 1;
@@ -71,6 +85,11 @@ int main(int argc, char *argv[])
         helper();
         return 1;
     }
+    if (argc == 4)
+    {
+        utility(filename, blockSize);
+        return 0;
+    }
 
     FILE *file_ptr = fopen(filename, "r");
     fseek(file_ptr, 0, SEEK_END);
@@ -78,16 +97,14 @@ int main(int argc, char *argv[])
     filelen = ftell(file_ptr);
     rewind(file_ptr);
     int ret = get_histogram(file_ptr, hist, blockSize, &microseconds, &filelen);
-    //fclose(file_ptr);
-    //printf("Computed the histogram in %ld microseconds.\n", microseconds);
+    printf("Computed the histogram in %ld microseconds.\n", microseconds);
     for (int i = 0; i < 26; i++)
     {
-        //printf("%c : %ld\n", 'A' + i, hist[i]);
+        printf("%c : %ld\n", 'A' + i, hist[i]);
     }
-    //printf("BLOCK SIZE %ld BYTES\n", blockSize);
-    //printf("TOTAL BYTES %ld BYTES\n", filelen);
-    //printf("TIME: %ld microseconds\n", microseconds);
-    //printf("Data rate: %f Bytes per second\n", ((double)filelen / microseconds) * 1000000);
-    printf("Data rate: %f Bytes per second for blocksize  %ld BYTES\n", ((double)filelen / microseconds) * 1000000, blockSize);
-    return microseconds;
+    printf("BLOCK SIZE %ld BYTES\n", blockSize);
+    printf("TOTAL BYTES %ld BYTES\n", filelen);
+    printf("TIME: %ld microseconds\n", microseconds);
+    printf("Data rate: %f Bytes per second\n", ((double)filelen / microseconds) * 1000000);
+    return 0;
 }
