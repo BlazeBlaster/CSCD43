@@ -34,12 +34,15 @@ int get_histogram(FILE *file_ptr, long hist[], int block_size, long *millisecond
     while (counter < (*total_bytes_read / (long)block_size)) {
         fread(buffer, block_size, 1, file_ptr);
         for (index = 0; index < block_size; index++) {
-            hist[buffer[index] - 'A'] ++;
+            hist[buffer[index] - 'A'] +=1;
         }
         counter++;
     }
-    end_time = getMicrotime();
     fclose(file_ptr);
+    end_time = getMicrotime();
+    
+    //printf("here");
+    //free(buffer);
     *milliseconds = end_time - cur_time;
     return 0;
 
@@ -71,17 +74,20 @@ int main(int argc, char *argv[])
 
     FILE *file_ptr = fopen(filename, "r");
     fseek(file_ptr, 0, SEEK_END);
+
     filelen = ftell(file_ptr);
     rewind(file_ptr);
     int ret = get_histogram(file_ptr, hist, blockSize, &microseconds, &filelen);
-    fclose(file_ptr);
-    printf("Computed the histogram in %ld microseconds.\n", microseconds);
+    //fclose(file_ptr);
+    //printf("Computed the histogram in %ld microseconds.\n", microseconds);
     for (int i = 0; i < 26; i++)
     {
-        printf("%c : %ld\n", 'A' + i, hist[i]);
+        //printf("%c : %ld\n", 'A' + i, hist[i]);
     }
-    printf("BLOCK SIZE %ld BYTES\n", blockSize);
-    printf("TOTAL BYTES %ld BYTES\n", filelen);
-    printf("TIME: %ld microseconds\n", microseconds);
-    printf("Data rate: %f Bytes per second\n", ((double)filelen / microseconds) * 1000000);
+    //printf("BLOCK SIZE %ld BYTES\n", blockSize);
+    //printf("TOTAL BYTES %ld BYTES\n", filelen);
+    //printf("TIME: %ld microseconds\n", microseconds);
+    //printf("Data rate: %f Bytes per second\n", ((double)filelen / microseconds) * 1000000);
+    printf("Data rate: %f Bytes per second for blocksize  %ld BYTES\n", ((double)filelen / microseconds) * 1000000, blockSize);
+    return microseconds;
 }
