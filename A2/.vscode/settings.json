@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.ss": "scheme",
+        "vector": "cpp"
+    }
+}
