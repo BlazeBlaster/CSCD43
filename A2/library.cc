@@ -71,7 +71,7 @@ void fixed_len_read(void *buf, int size, Record *record)
 void init_fixed_len_page(Page *page, int page_size, int slot_size)
 {
     page->data = malloc(page_size);
-    memset(page->data, '\0', page_size);
+    memset(page->data, 0, page_size);
     page->page_size = page_size;
     page->slot_size = slot_size;
     return;
@@ -113,7 +113,7 @@ int add_fixed_len_page(Page *page, Record *r)
     int count = 0;
     while (count <= (page->page_size / page->slot_size))
     {
-        if (*iterator == '\0')
+        if (*iterator == 0)
         {
             break;
         }
@@ -129,18 +129,10 @@ int add_fixed_len_page(Page *page, Record *r)
         int size = r->size();
         int total = 0;
         for (int i = 0; i < size; i++)
-        {
+        {   
             int len = strlen((*r)[i]);
-            if ((total + len) <= page->slot_size)
-            {
-                memcpy(iterator, (*r)[i], attr_size);
-                iterator += attr_size;
-                total += attr_size;
-            }
-            else
-            {
-                break;
-            }
+            memcpy(iterator, (*r)[i], min(len, attr_size));
+            iterator+= attr_size;
         }
         return count;
     }
