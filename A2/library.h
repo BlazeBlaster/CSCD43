@@ -1,11 +1,8 @@
+#ifndef LIBRARY_H
+#define LIBRARY_H
 #include <vector>
 typedef const char* V;
 typedef std::vector<V> Record;
-
-
-#include <vector>
-#include <stdio.h>
-#include <stdlib.h>
 
 typedef const char *V;
 typedef std::vector<V> Record;
@@ -27,3 +24,5 @@ int fixed_len_page_freeslots(Page *page);
 int add_fixed_len_page(Page *page, Record *r);
 void write_fixed_len_page(Page *page, int slot, Record *r);
 void read_fixed_len_page(Page *page, int slot, Record *r);
+
+#endif

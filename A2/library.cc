@@ -1,6 +1,8 @@
 #include <vector>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
+using namespace std;
 
 typedef const char *V;
 typedef std::vector<V> Record;
@@ -19,16 +21,15 @@ typedef struct
 int fixed_len_sizeof(Record *record)
 {
 
-    // int len = record->size();
-    // int total = 0;
-    // const char* field;
-    // for (int i = 0; i < len; i++) {
-    //     field = (*record)[i];
-    //     total += strlen(field);
-    // }
-    // return total;
-
-    return 1000;
+    int len = record->size();
+    int total = 0;
+    const char *field;
+    for (int i = 0; i < len; i++)
+    {
+        field = (*record)[i];
+        total += strlen(field);
+    }
+    return total;
 }
 
 /**
@@ -60,7 +61,7 @@ void fixed_len_read(void *buf, int size, Record *record)
     char *buff = (char *)buf;
     char *a = (char *)malloc(size);
     memcpy(a, buff, size);
-    record->push_back((V) a);
+    record->push_back((V)a);
 }
 
 /**
@@ -72,6 +73,8 @@ void init_fixed_len_page(Page *page, int page_size, int slot_size)
     memset(page->data, '\0', page_size);
     page->page_size = page_size;
     page->slot_size = slot_size;
+    printf("in init...\n");
+    return;
 }
 
 /**
@@ -79,7 +82,7 @@ void init_fixed_len_page(Page *page, int page_size, int slot_size)
  */
 int fixed_len_page_capacity(Page *page)
 {
-    return page->page_size / page->slot_size;
+    return (page->page_size / page->slot_size);
 }
 
 /**
@@ -108,10 +111,15 @@ int add_fixed_len_page(Page *page, Record *r)
     char *iterator = (char *)page->data;
     int slotcount = 0;
     int count = 0;
-    while (iterator != NULL)
+    while (count <= (page->page_size / page->slot_size))
     {
+
+        if (*iterator == '\0')
+        {
+            break;
+        }
         count++;
-        iterator += page->slot_size;
+        iterator += (page->slot_size);
     }
     if (count == (page->page_size / page->slot_size))
     {
@@ -127,14 +135,15 @@ int add_fixed_len_page(Page *page, Record *r)
             if ((total + len) <= page->slot_size)
             {
                 memcpy(iterator, (*r)[i], len);
-                iterator+= len;
-                total+= len;
+                iterator += len;
+                total += len;
             }
-            else {
+            else
+            {
                 break;
             }
         }
-        return count + 1;
+        return count;
     }
 }
 
@@ -149,7 +158,8 @@ void write_fixed_len_page(Page *page, int slot, Record *r)
     {
         count++;
         iterator += page->slot_size;
-        if (count == slot) {
+        if (count == slot)
+        {
             break;
         }
     }
@@ -167,9 +177,10 @@ void read_fixed_len_page(Page *page, int slot, Record *r)
     {
         count++;
         iterator += page->slot_size;
-        if (count == slot) {
+        if (count == slot)
+        {
             break;
         }
     }
-    fixed_len_read(iterator,page->slot_size,r);
+    fixed_len_read(iterator, page->slot_size, r);
 }
