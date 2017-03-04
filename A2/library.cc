@@ -7,7 +7,7 @@ using namespace std;
 typedef const char *V;
 typedef std::vector<V> Record;
 typedef unsigned char byte;
-
+const int attr_size = 10;
 typedef struct
 {
     void *data;
@@ -37,7 +37,7 @@ int fixed_len_sizeof(Record *record)
  */
 void fixed_len_write(Record *record, void *buf)
 {
-    char *buff = (char *)buf;
+    byte *buff = (byte *)buf;
     int len = record->size();
     int fieldlen;
     int total = 0;
@@ -46,6 +46,7 @@ void fixed_len_write(Record *record, void *buf)
     for (int i = 0; i < len; i++)
     {
         field = (*record)[i];
+        printf("???", field);
         fieldlen = strlen(field);
         memcpy(buff + offset, field, fieldlen);
         offset += fieldlen;
@@ -73,7 +74,6 @@ void init_fixed_len_page(Page *page, int page_size, int slot_size)
     memset(page->data, '\0', page_size);
     page->page_size = page_size;
     page->slot_size = slot_size;
-    printf("in init...\n");
     return;
 }
 
@@ -113,7 +113,6 @@ int add_fixed_len_page(Page *page, Record *r)
     int count = 0;
     while (count <= (page->page_size / page->slot_size))
     {
-
         if (*iterator == '\0')
         {
             break;
@@ -134,9 +133,9 @@ int add_fixed_len_page(Page *page, Record *r)
             int len = strlen((*r)[i]);
             if ((total + len) <= page->slot_size)
             {
-                memcpy(iterator, (*r)[i], len);
-                iterator += len;
-                total += len;
+                memcpy(iterator, (*r)[i], attr_size);
+                iterator += attr_size;
+                total += attr_size;
             }
             else
             {
