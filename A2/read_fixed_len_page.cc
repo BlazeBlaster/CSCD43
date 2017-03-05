@@ -33,17 +33,17 @@ int main(int argc, char **argv)
   int count = 0;
   r = new Record;
   while (in.read(buf,attr_size)) {
-    p = (char *)malloc(attr_size);
-    memcpy (p, buf, attr_size);
-    //std::cout << p << ',';
+    p = (char *)malloc(attr_size + 1);
+    cout << buf << '\n';
+    strcpy(p,buf);
     r->push_back(p);
     count++;
     if (count == Num_Columns){
       for (int i = 0; i < r->size(); i++){
-        std::cout << r->at(i) << ',';
+        //std::cout << r->at(i) << ',';
       }
       r = new Record;
-      std::cout << '\n';
+      //std::cout << '\n';
       count = 0;
       numRecords++;
     }

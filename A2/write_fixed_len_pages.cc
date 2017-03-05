@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 
     struct timeb before;
     struct timeb after;
-
+    int slot;
     ftime(&before);
     long now_in_ms = before.time * 1000 + before.millitm;
     while (getline(csv, line))
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
             cout << cstr << '\n';
         }
 
-        int slot = add_fixed_len_page(pagefile, r);
+        slot = add_fixed_len_page(pagefile, r);
         numRecords++;
         if (slot == maxRecords - 1)
         {
@@ -68,6 +68,9 @@ int main(int argc, char **argv)
             init_fixed_len_page(pagefile, page_size, Rec_Size);
             numPages++;
         }
+    }
+    if (slot != maxRecords - 1) {
+        page.write((char *)pagefile->data, pagefile->page_size);
     }
     ftime(&after);
     long finish = after.time * 1000 + after.millitm;
