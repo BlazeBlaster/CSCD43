@@ -34,22 +34,25 @@ int main(int argc, char **argv)
   r = new Record;
   while (in.read(buf,attr_size)) {
     p = (char *)malloc(attr_size + 1);
-    cout << buf << '\n';
+    if (*buf == '\0') {
+      break;
+    }
     strcpy(p,buf);
     r->push_back(p);
     count++;
     if (count == Num_Columns){
       for (int i = 0; i < r->size(); i++){
-        //std::cout << r->at(i) << ',';
+        std::cout << r->at(i) << ',';
       }
       r = new Record;
-      //std::cout << '\n';
+      std::cout << '\n';
       count = 0;
       numRecords++;
     }
   }
   //calc num pages by: ceil(numRecord * size of record / pagesize)
   int numPages = (int) ceil(numRecords*Rec_Size/atof(argv[2]));
+  ftime(&after);
   long finish = after.time * 1000 + after.millitm;
 
   printf("NUMBER OF RECORDS: %d\n", numRecords);
