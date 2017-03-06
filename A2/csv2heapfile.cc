@@ -46,7 +46,7 @@ void init_heapfile(Heapfile *heapfile, int page_size, FILE *file)
 
     FILE *f = file;
     void *c = malloc(page_size);
-    printf("KENNY WTF\n");
+    fseek(f, 0, SEEK_SET);
     int empty = fread (c, page_size, 1, f);
     if (!empty) {
         printf("EMPTY?\n");
@@ -55,23 +55,53 @@ void init_heapfile(Heapfile *heapfile, int page_size, FILE *file)
         DirectoryInfo *d = new DirectoryInfo;
         d->offset = 0;
         d->next = -1;
-
-        memcpy(directory->data,d,page_size);
+        printf("d is ? %d\n", (d->offset));
+        memcpy((int *)directory->data,&(d->offset),1);
+        memcpy((int *)directory->data + 1,&(d->next), sizeof(int));
+        int *a = (int *)malloc(1);
+        memcpy(a,(int *)(directory->data) + 1,sizeof(int));
         /// ?????
         fwrite(directory->data,page_size,1,f);
     } else {
-        Page *directory = new Page;
-        ///????????
-        
+        return;
+        // ??? 
     }
 
+}
+
+PageID alloc_page(Heapfile *heapfile) {
+    FILE *f = heapfile->file_ptr;
+    int page_size = heapfile->page_size;
+    fseek(f, 0, SEEK_SET);
+    int *c = (int *)malloc(1);
+    int *d = (int *)malloc(1);
+    int empty = fread(c, sizeof(int), 1, f);
+    int next = fread(d, sizeof(int), 1, f);
+    if (!empty) {
+        printf("Houston we have a problem");
+    } else {
+        printf("the offset is %d\n", *c);
+        printf("The next page is %d\n", *d);
+        
+        int *cur_page = (int *)malloc(1);
+        int *cur_num_slots = (int *) malloc(1);
+        int *cur_offset = (int *)malloc(1);
+        int offset = 0;
+        while (!(fread(cur_page, sizeof(int), 1, f) || fread(cur_num_slots, sizeof(int), 1, f) || fread(cur_offset, sizeof(int), 1, f))) {
+            printf("cur page is %d, cur_num_slots is %d, cur_offset is %d\n", *cur_page, *cur_num_slots, *cur_offset);
+            offset++;
+        }
+        printf("we're done traversing and the first page is free at offset %d\n", offset);
+        printf("the pointer is currently at %d\n, the beginning is %d\n", SEEK_CUR, SEEK_SET);
+    }
 }
 
 
 int main(int argc, char **argv) {
     Heapfile *h = new Heapfile;
-    FILE *f = fopen("heapfile", "r+");
+    FILE *f = fopen("heapfile", "rb+");
     init_heapfile(h, 1000, f);
+    alloc_page(h);
     return 1;
 }
 
