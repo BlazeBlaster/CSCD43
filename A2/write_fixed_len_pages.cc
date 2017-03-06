@@ -8,7 +8,7 @@
 
 using namespace std;
 
-#define Rec_Size 60
+#define Rec_Size 1000
 #define Num_Columns 100
 
 #define Buf_Size (10 * 100 + (100 - 1) + 1)
@@ -57,7 +57,7 @@ int main(int argc, char **argv)
             char *cstr = new char[strlen(attribute.c_str()) + 1];
             strcpy(cstr, attribute.c_str());
             r->push_back(cstr);
-            cout << cstr << '\n';
+            //cout << cstr << '\n';
         }
 
         slot = add_fixed_len_page(pagefile, r);

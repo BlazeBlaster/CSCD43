@@ -41,11 +41,11 @@ int main(int argc, char **argv)
     r->push_back(p);
     count++;
     if (count == Num_Columns){
-      for (int i = 0; i < r->size(); i++){
-        std::cout << r->at(i) << ',';
-      }
+      //for (int i = 0; i < r->size(); i++){
+        //std::cout << r->at(i) << ',';
+      //}
       r = new Record;
-      std::cout << '\n';
+      //std::cout << '\n';
       count = 0;
       numRecords++;
     }
